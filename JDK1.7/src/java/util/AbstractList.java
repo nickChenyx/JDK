@@ -598,6 +598,8 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * does not wish to provide fail-fast iterators, this field may be
      * ignored.
      */
+    // 用于实现 fail-fast机制的字段
+    // 每次使用 next remove previous set add 方法的时候会+1
     protected transient int modCount = 0;
 
     private void rangeCheckForAdd(int index) {

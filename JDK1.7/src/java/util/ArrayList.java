@@ -98,6 +98,9 @@ package java.util;
  * @see     Vector
  * @since   1.2
  */
+// 2017年11月24日
+// RandomAccess 这个接口没有任何方法和字段，目的是为了表明该List 适合用随机访问的方式去遍历
+// 没有这个接口的List 更适合用 Iterator 去顺序遍历，效率更高。如 LinkedList。 更详细的可以看 RandomAccess 类里的注释
 
 public class ArrayList<E> extends AbstractList<E>
         implements List<E>, RandomAccess, Cloneable, java.io.Serializable
@@ -108,6 +111,7 @@ public class ArrayList<E> extends AbstractList<E>
      * The array buffer into which the elements of the ArrayList are stored.
      * The capacity of the ArrayList is the length of this array buffer.
      */
+    // 本质上是用一个 Object的数组去存储对象
     private transient Object[] elementData;
 
     /**
@@ -135,6 +139,7 @@ public class ArrayList<E> extends AbstractList<E>
     /**
      * Constructs an empty list with an initial capacity of ten.
      */
+    // ArrayList 的初始化的默认长度为10
     public ArrayList() {
         this(10);
     }
@@ -150,6 +155,8 @@ public class ArrayList<E> extends AbstractList<E>
     public ArrayList(Collection<? extends E> c) {
         elementData = c.toArray();
         size = elementData.length;
+        // http://blog.csdn.net/aitangyong/article/details/30274749
+        // 上面这篇文章解释了下面这句注释的原由。避免错误的类型放入数组中而引发错误。比如说 c.toArray() 可能返回一个 String[]
         // c.toArray might (incorrectly) not return Object[] (see 6260652)
         if (elementData.getClass() != Object[].class)
             elementData = Arrays.copyOf(elementData, size, Object[].class);

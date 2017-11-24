@@ -205,6 +205,7 @@ public interface List<E> extends Collection<E> {
      *         this list
      * @throws NullPointerException if the specified array is null
      */
+    // 如果运行时注入的不是一个 T[] 的子类，那么抛出 ArrayStoreException
     <T> T[] toArray(T[] a);
 
 

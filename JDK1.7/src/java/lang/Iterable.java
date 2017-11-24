@@ -35,6 +35,8 @@ import java.util.Iterator;
  *
  * @since 1.5
  */
+// 2017年11月24日
+// 只需要返回 iterator
 public interface Iterable<T> {
 
     /**

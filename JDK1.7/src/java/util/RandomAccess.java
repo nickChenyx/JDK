@@ -32,7 +32,7 @@ package java.util;
  * behavior to provide good performance when applied to either random or
  * sequential access lists.
  *
- * <p>The best algorithms for manipulating random access lists (such as
+ * <p>The best algorithms for manipulating random accss lists (such as
  * <tt>ArrayList</tt>) can produce quadratic behavior when applied to
  * sequential access lists (such as <tt>LinkedList</tt>).  Generic list
  * algorithms are encouraged to check whether the given list is an
@@ -64,5 +64,17 @@ package java.util;
  *
  * @since 1.4
  */
+// 2017年11月24日
+/* 如果集合类是RandomAccess的实现，则尽量用for(int i = 0; i < size; i++) 来遍历而不要用Iterator迭代器来遍历。
+ * 反过来，如果List是Sequence List，则最好用迭代器来进行迭代。
+ * 例如对 ArrayList就for， 对 LinkedList用 iterator，反之速度会有较大差异。
+    if (list instance of RandomAccess) {
+        for(int m = 0; m < list.size(); m++){}
+    }else{
+        Iterator iter = list.iterator();
+        while(iter.hasNext()){}
+    }
+ */
+
 public interface RandomAccess {
 }

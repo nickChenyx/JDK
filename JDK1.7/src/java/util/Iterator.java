@@ -49,6 +49,8 @@ package java.util;
  * @see Iterable
  * @since 1.2
  */
+// 2017年11月24日
+// 提供一个迭代器
 public interface Iterator<E> {
     /**
      * Returns {@code true} if the iteration has more elements.
@@ -65,6 +67,7 @@ public interface Iterator<E> {
      * @return the next element in the iteration
      * @throws NoSuchElementException if the iteration has no more elements
      */
+    // 到最后了需要抛出 NoSuchElementException
     E next();
 
     /**
@@ -83,5 +86,7 @@ public interface Iterator<E> {
      *         been called after the last call to the {@code next}
      *         method
      */
+    // 如果不支持删除抛出 UnsupportedOperationException
+    // 如果一次next 只能remove 一次，没有next直接remove或者next之后remove多次抛出 IllegalStateException
     void remove();
 }

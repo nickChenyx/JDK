@@ -57,6 +57,8 @@ package java.util;
  * @see List#listIterator()
  * @since   1.2
  */
+// 2017年11月24日
+// 双向 Iterator 可前可厚 previous() next()
 public interface ListIterator<E> extends Iterator<E> {
     // Query Operations
 
