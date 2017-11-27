@@ -67,7 +67,7 @@ package java.util;
  * @author  Neal Gafter
  * @since 1.2
  */
-
+// 2017年11月27日
 public abstract class AbstractList<E> extends AbstractCollection<E> implements List<E> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically

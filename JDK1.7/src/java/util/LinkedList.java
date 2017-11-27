@@ -77,7 +77,7 @@ package java.util;
  * @since 1.2
  * @param <E> the type of elements held in this collection
  */
-
+// 2017年11月27日
 public class LinkedList<E>
     extends AbstractSequentialList<E>
     implements List<E>, Deque<E>, Cloneable, java.io.Serializable
@@ -120,6 +120,7 @@ public class LinkedList<E>
     /**
      * Links e as first element.
      */
+    // 新增一个 Node 作为头结点
     private void linkFirst(E e) {
         final Node<E> f = first;
         final Node<E> newNode = new Node<>(null, e, f);
@@ -129,12 +130,13 @@ public class LinkedList<E>
         else
             f.prev = newNode;
         size++;
-        modCount++;
+        modCount++; // 操作数++
     }
 
     /**
      * Links e as last element.
      */
+    // 新增一个 Node 作为尾部结点
     void linkLast(E e) {
         final Node<E> l = last;
         final Node<E> newNode = new Node<>(l, e, null);
@@ -144,12 +146,13 @@ public class LinkedList<E>
         else
             l.next = newNode;
         size++;
-        modCount++;
+        modCount++; // 操作数++
     }
 
     /**
      * Inserts element e before non-null Node succ.
      */
+    // 在 succ 结点前新增一个结点 e， succ是一个不为null的已知结点
     void linkBefore(E e, Node<E> succ) {
         // assert succ != null;
         final Node<E> pred = succ.prev;
@@ -160,12 +163,13 @@ public class LinkedList<E>
         else
             pred.next = newNode;
         size++;
-        modCount++;
+        modCount++; // 操作数++
     }
 
     /**
      * Unlinks non-null first node f.
      */
+    // 释放头结点，并返回头结点的值
     private E unlinkFirst(Node<E> f) {
         // assert f == first && f != null;
         final E element = f.item;
@@ -185,6 +189,7 @@ public class LinkedList<E>
     /**
      * Unlinks non-null last node l.
      */
+    // 释放尾结点，并返回结点值
     private E unlinkLast(Node<E> l) {
         // assert l == last && l != null;
         final E element = l.item;
@@ -204,6 +209,7 @@ public class LinkedList<E>
     /**
      * Unlinks non-null node x.
      */
+    // 释放随机结点，并返回节点值
     E unlink(Node<E> x) {
         // assert x != null;
         final E element = x.item;
@@ -406,7 +412,7 @@ public class LinkedList<E>
         Object[] a = c.toArray();
         int numNew = a.length;
         if (numNew == 0)
-            return false;
+            return false; // 如果 c 的长度为0  直接就返回 false了
 
         Node<E> pred, succ;
         if (index == size) {
@@ -563,7 +569,7 @@ public class LinkedList<E>
      */
     Node<E> node(int index) {
         // assert isElementIndex(index);
-
+        // 先二分，减少搜索量
         if (index < (size >> 1)) {
             Node<E> x = first;
             for (int i = 0; i < index; i++)
@@ -1090,7 +1096,7 @@ public class LinkedList<E>
             result[i++] = x.item;
 
         if (a.length > size)
-            a[size] = null;
+            a[size] = null; // 习惯 末尾置 null
 
         return a;
     }

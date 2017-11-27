@@ -141,6 +141,7 @@ package java.util;
  * @author Doug Lea
  * @param <E> the type of elements held in this collection
  */
+// 2017年11月27日
 public interface Queue<E> extends Collection<E> {
     /**
      * Inserts the specified element into this queue if it is possible to do so
@@ -159,6 +160,7 @@ public interface Queue<E> extends Collection<E> {
      * @throws IllegalArgumentException if some property of this element
      *         prevents it from being added to this queue
      */
+    // 如果因为容量限制不能再添加，会抛出 IllegalStateException
     boolean add(E e);
 
     /**
@@ -178,6 +180,7 @@ public interface Queue<E> extends Collection<E> {
      * @throws IllegalArgumentException if some property of this element
      *         prevents it from being added to this queue
      */
+    // 添加一个元素， 但是如果这个队列是有容量限制的话，最好使用 add() 方法
     boolean offer(E e);
 
     /**
@@ -188,6 +191,8 @@ public interface Queue<E> extends Collection<E> {
      * @return the head of this queue
      * @throws NoSuchElementException if this queue is empty
      */
+    // 从头部移除一个值并返回
+    // 和 pull() 唯一不同的是，如果队列是空的话，该方法抛出 NoSuchElementException
     E remove();
 
     /**
@@ -196,6 +201,8 @@ public interface Queue<E> extends Collection<E> {
      *
      * @return the head of this queue, or <tt>null</tt> if this queue is empty
      */
+    // 从头部移除一个值并返回
+    // 如果该队列时空的，返回null
     E poll();
 
     /**
@@ -206,6 +213,8 @@ public interface Queue<E> extends Collection<E> {
      * @return the head of this queue
      * @throws NoSuchElementException if this queue is empty
      */
+    // 返回队列的头部的值
+    // 和 peek() 方法唯一不同的是，当队列为空时，抛出 NoSuchElementException
     E element();
 
     /**
@@ -214,5 +223,7 @@ public interface Queue<E> extends Collection<E> {
      *
      * @return the head of this queue, or <tt>null</tt> if this queue is empty
      */
+    // 返回队列的头部的值
+    // 当队列为空时，返回null
     E peek();
 }

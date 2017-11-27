@@ -115,6 +115,7 @@ import sun.reflect.misc.ReflectUtil;
  * @see     java.lang.ClassLoader#defineClass(byte[], int, int)
  * @since   JDK1.0
  */
+// 2017年11月27日
 public final
     class Class<T> implements java.io.Serializable,
                               java.lang.reflect.GenericDeclaration,
@@ -827,6 +828,7 @@ public final
      * @see     java.lang.reflect.Array
      * @since JDK1.1
      */
+    // 获取数组的成员类型
     public native Class<?> getComponentType();
 
 

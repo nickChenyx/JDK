@@ -190,7 +190,7 @@ package java.util;
  * @since  1.6
  * @param <E> the type of elements held in this collection
  */
-
+// 2017年11月27日
 public interface Deque<E> extends Queue<E> {
     /**
      * Inserts the specified element at the front of this deque if it is
@@ -208,6 +208,7 @@ public interface Deque<E> extends Queue<E> {
      * @throws IllegalArgumentException if some property of the specified
      *         element prevents it from being added to this deque
      */
+    // 从头部插入一个值，当有容量限制而不能插入时，抛出 IllegalStateException
     void addFirst(E e);
 
     /**
@@ -228,6 +229,7 @@ public interface Deque<E> extends Queue<E> {
      * @throws IllegalArgumentException if some property of the specified
      *         element prevents it from being added to this deque
      */
+    // 从尾部插入一个值，当有容量限制而不能插入时，抛出 IllegalStateException
     void addLast(E e);
 
     /**
@@ -246,6 +248,7 @@ public interface Deque<E> extends Queue<E> {
      * @throws IllegalArgumentException if some property of the specified
      *         element prevents it from being added to this deque
      */
+    // 从头部插入一个值，若是该队列有长度限制，则优先使用 addFirst() 方法
     boolean offerFirst(E e);
 
     /**
@@ -264,6 +267,7 @@ public interface Deque<E> extends Queue<E> {
      * @throws IllegalArgumentException if some property of the specified
      *         element prevents it from being added to this deque
      */
+    // 从尾部插入一个值，若是该队列有长度限制，则优先使用 addLast() 方法
     boolean offerLast(E e);
 
     /**
@@ -274,6 +278,8 @@ public interface Deque<E> extends Queue<E> {
      * @return the head of this deque
      * @throws NoSuchElementException if this deque is empty
      */
+    // 从头部抛出一个值并返回
+    // 和 pollFirst 唯一不同的是，当队列为空时，抛出 NoSuchElementException
     E removeFirst();
 
     /**
@@ -284,6 +290,8 @@ public interface Deque<E> extends Queue<E> {
      * @return the tail of this deque
      * @throws NoSuchElementException if this deque is empty
      */
+    // 从尾部抛出一个值并返回
+    // 和 pollLast 唯一不同的是，当队列为空时，抛出 NoSuchElementException
     E removeLast();
 
     /**
@@ -292,6 +300,8 @@ public interface Deque<E> extends Queue<E> {
      *
      * @return the head of this deque, or <tt>null</tt> if this deque is empty
      */
+    // 从头部抛出一个值并返回
+    // 当队列为空时，返回null
     E pollFirst();
 
     /**
@@ -300,6 +310,8 @@ public interface Deque<E> extends Queue<E> {
      *
      * @return the tail of this deque, or <tt>null</tt> if this deque is empty
      */
+    // 从尾部抛出一个值并返回
+    // 当队列为空时，返回null
     E pollLast();
 
     /**
@@ -311,6 +323,8 @@ public interface Deque<E> extends Queue<E> {
      * @return the head of this deque
      * @throws NoSuchElementException if this deque is empty
      */
+    // 返回头部的值
+    // 和 peekFirst 唯一不同的是，当队列为空时，抛出 NoSuchElementException
     E getFirst();
 
     /**
@@ -321,6 +335,8 @@ public interface Deque<E> extends Queue<E> {
      * @return the tail of this deque
      * @throws NoSuchElementException if this deque is empty
      */
+    // 返回尾部的值
+    // 和 peekLast 唯一不同的是，当队列为空时，抛出 NoSuchElementException
     E getLast();
 
     /**
@@ -329,6 +345,8 @@ public interface Deque<E> extends Queue<E> {
      *
      * @return the head of this deque, or <tt>null</tt> if this deque is empty
      */
+    // 返回头部的值
+    // 队列为空返回null
     E peekFirst();
 
     /**
@@ -337,6 +355,8 @@ public interface Deque<E> extends Queue<E> {
      *
      * @return the tail of this deque, or <tt>null</tt> if this deque is empty
      */
+    // 返回尾部的值
+    // 队列为空返回null
     E peekLast();
 
     /**

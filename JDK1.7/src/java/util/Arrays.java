@@ -52,6 +52,7 @@ import java.lang.reflect.*;
  * @author John Rose
  * @since  1.2
  */
+// 2017年11月27日
 public class Arrays {
 
     // Suppresses default constructor, ensuring non-instantiability.
@@ -2215,6 +2216,7 @@ public class Arrays {
      * @throws NullPointerException if <tt>original</tt> is null
      * @since 1.6
      */
+    // 返回的是一个浅拷贝，只拷贝了数据的引用
     public static <T> T[] copyOf(T[] original, int newLength) {
         return (T[]) copyOf(original, newLength, original.getClass());
     }

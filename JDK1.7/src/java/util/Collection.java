@@ -123,7 +123,8 @@ package java.util;
  * @see     AbstractCollection
  * @since 1.2
  */
-
+// 2017年11月27日
+// 集合类顶层接口，这里可以看到所有的集合类都继承 Iterable，有 iterator() 方法
 public interface Collection<E> extends Iterable<E> {
     // Query Operations
 
@@ -134,6 +135,8 @@ public interface Collection<E> extends Iterable<E> {
      *
      * @return the number of elements in this collection
      */
+    // 返回集合的元素个数，若大于 Integer.MAX_VALUE 则返回 Integer.MAX_VALUE
+    // = = 集合类的顶层限制，默认不会超过 Integer.MAX_VALUE —— 超过了很多方法就没法用了= =
     int size();
 
     /**
@@ -159,6 +162,8 @@ public interface Collection<E> extends Iterable<E> {
      *         collection does not permit null elements
      *         (<a href="#optional-restrictions">optional</a>)
      */
+    // 如果 o 与这个集合类的元素不相容，抛出 ClassCastException
+    // 该集合不允许 null 元素且 o 为 null，抛出 NullPointerException
     boolean contains(Object o);
 
     /**
@@ -169,6 +174,7 @@ public interface Collection<E> extends Iterable<E> {
      *
      * @return an <tt>Iterator</tt> over the elements in this collection
      */
+    // 返回一个迭代器，但是不保证顺序，除非是某个特殊的类声明了确保他是顺序的
     Iterator<E> iterator();
 
     /**
@@ -187,6 +193,7 @@ public interface Collection<E> extends Iterable<E> {
      *
      * @return an array containing all of the elements in this collection
      */
+    // 确保顺序和 Iterator 的顺序一样
     Object[] toArray();
 
     /**

@@ -105,7 +105,7 @@ package java.util;
  * @see AbstractSequentialList
  * @since 1.2
  */
-
+// 2017年11月27日
 public interface List<E> extends Collection<E> {
     // Query Operations
 

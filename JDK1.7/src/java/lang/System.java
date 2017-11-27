@@ -52,6 +52,7 @@ import sun.reflect.annotation.AnnotationType;
  * @author  unascribed
  * @since   JDK1.0
  */
+// 2017年11月27日
 public final class System {
 
     /* register the natives via the static initializer.
@@ -486,6 +487,7 @@ public final class System {
      * @exception  NullPointerException if either <code>src</code> or
      *               <code>dest</code> is <code>null</code>.
      */
+    // 浅拷贝，只拷贝引用
     public static native void arraycopy(Object src,  int  srcPos,
                                         Object dest, int destPos,
                                         int length);

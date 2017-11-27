@@ -57,7 +57,7 @@ package java.util;
  * @see Collection
  * @since 1.2
  */
-
+// 2017年11月27日
 public abstract class AbstractCollection<E> implements Collection<E> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
@@ -173,6 +173,8 @@ public abstract class AbstractCollection<E> implements Collection<E> {
     public <T> T[] toArray(T[] a) {
         // Estimate size of array; be prepared to see more or fewer elements
         int size = size();
+        // 运行时通过反射创建一个数组
+        // class.getComponentType() 获取数组的成员类型
         T[] r = a.length >= size ? a :
                   (T[])java.lang.reflect.Array
                   .newInstance(a.getClass().getComponentType(), size);
@@ -208,6 +210,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @return array containing the elements in the given array, plus any
      *         further elements returned by the iterator, trimmed to size
      */
+    // 将迭代器中剩余的数据填充到 r 中，最后还要trim一下长度
     private static <T> T[] finishToArray(T[] r, Iterator<?> it) {
         int i = r.length;
         while (it.hasNext()) {
