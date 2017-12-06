@@ -64,7 +64,7 @@ import java.util.Map.Entry;
  * @see Collection
  * @since 1.2
  */
-
+// 2017年12月5日
 public abstract class AbstractMap<K,V> implements Map<K,V> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically

@@ -130,7 +130,8 @@ import java.io.*;
  * @author  Doug Lea and Josh Bloch
  * @since   1.4
  */
-
+// 2017年12月5日
+// 使用一个 Object[] table 来存储数据， index 0,1 分别用来存储 key value
 public class IdentityHashMap<K,V>
     extends AbstractMap<K,V>
     implements Map<K,V>, java.io.Serializable, Cloneable
@@ -233,6 +234,7 @@ public class IdentityHashMap<K,V>
      */
     private int capacity(int expectedMaxSize) {
         // Compute min capacity for expectedMaxSize given a load factor of 2/3
+        // size = (capacity + load factor) * 2 / 3
         int minCapacity = (3 * expectedMaxSize)/2;
 
         // Compute the appropriate capacity
@@ -324,7 +326,8 @@ public class IdentityHashMap<K,V>
      * possible that the map explicitly maps the key to {@code null}.
      * The {@link #containsKey containsKey} operation may be used to
      * distinguish these two cases.
-     *
+     * // 这个类在返回null时有两种情况，一个是的确没有对应的 key，一个是key就是null，
+     * // 参考 containsKey可以区别这种模棱两可的情况
      * @see #put(Object, Object)
      */
     public V get(Object key) {
@@ -422,6 +425,8 @@ public class IdentityHashMap<K,V>
      * @see     #get(Object)
      * @see     #containsKey(Object)
      */
+    // 这里就解释了为啥 get contain 操作都需要 while循环 i=nextKeyIndex 这样的做法
+    // 发生 hash 碰撞的时候， key向后移动两位 i+2。
     public V put(K key, V value) {
         Object k = maskNull(key);
         Object[] tab = table;
@@ -467,7 +472,7 @@ public class IdentityHashMap<K,V>
             return;
 
         Object[] newTable = new Object[newLength];
-        threshold = newLength / 3;
+        threshold = newLength / 3; // 这里 load factor 变为了 1/3
 
         for (int j = 0; j < oldLength; j += 2) {
             Object key = oldTable[j];
@@ -576,6 +581,8 @@ public class IdentityHashMap<K,V>
      *
      * @param d the index of a newly empty deleted slot
      */
+    // 在位置 d 处，d删除了，更新后面的元素（重新hash），目标是减少hash碰撞
+    // 参考链接 http://www.cnblogs.com/leesf456/p/5253094.html
     private void closeDeletion(int d) {
         // Adapted from Knuth Section 6.4 Algorithm R
         Object[] tab = table;

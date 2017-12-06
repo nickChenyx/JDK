@@ -143,7 +143,7 @@ import java.io.*;
  * @see     Hashtable
  * @since   1.4
  */
-
+// 2017年12月6日
 public class LinkedHashMap<K,V>
     extends HashMap<K,V>
     implements Map<K,V>
@@ -153,6 +153,9 @@ public class LinkedHashMap<K,V>
 
     /**
      * The head of the doubly linked list.
+     *
+     * 使用这个 header来索引一个双向两边，
+     * Entry有两个属性 before 和 after。
      */
     private transient Entry<K,V> header;
 
@@ -162,6 +165,8 @@ public class LinkedHashMap<K,V>
      *
      * @serial
      */
+    // true 存取顺序迭代
+    // false 插入顺序迭代
     private final boolean accessOrder;
 
     /**
@@ -246,6 +251,8 @@ public class LinkedHashMap<K,V>
      * Transfers all entries to new table array.  This method is called
      * by superclass resize.  It is overridden for performance, as it is
      * faster to iterate using our linked list.
+     *
+     * 覆盖了父类的方法，使用 header来迭代整个链表比父类来的更有效率
      */
     @Override
     void transfer(HashMap.Entry[] newTable, boolean rehash) {
@@ -351,10 +358,10 @@ public class LinkedHashMap<K,V>
          */
         void recordAccess(HashMap<K,V> m) {
             LinkedHashMap<K,V> lm = (LinkedHashMap<K,V>)m;
-            if (lm.accessOrder) {
+            if (lm.accessOrder) { // true
                 lm.modCount++;
                 remove();
-                addBefore(lm.header);
+                addBefore(lm.header); // 按存取顺序来排序，后放的在header
             }
         }
 
@@ -485,6 +492,10 @@ public class LinkedHashMap<K,V>
      *           entry, the eldest entry is also the newest.
      * @return   <tt>true</tt> if the eldest entry should be removed
      *           from the map; <tt>false</tt> if it should be retained.
+     */
+    /**
+     * 清理年长的 entry，方便子类拓展的钩子方法
+     * @see ExpiringCache
      */
     protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
         return false;

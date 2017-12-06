@@ -487,7 +487,9 @@ public final class System {
      * @exception  NullPointerException if either <code>src</code> or
      *               <code>dest</code> is <code>null</code>.
      */
-    // 浅拷贝，只拷贝引用
+    // 针对基础类型，进行深拷贝
+    // 针对除基础类型外的对象进行引用的拷贝，浅拷贝
+    // int[][] 的拷贝属于浅拷贝， 数组中存储着数组对象
     public static native void arraycopy(Object src,  int  srcPos,
                                         Object dest, int destPos,
                                         int length);
@@ -503,6 +505,7 @@ public final class System {
      * @return  the hashCode
      * @since   JDK1.1
      */
+    // 【同 Obj.hashcode()的区别】 直接返回对象(Object)的hashcode值，不执行被覆盖的 hashcode() 方法。
     public static native int identityHashCode(Object x);
 
     /**

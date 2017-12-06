@@ -67,7 +67,7 @@ import java.lang.reflect.Array;
  * @see     Map
  * @since   1.2
  */
-
+// 2017年11月28日
 public class Collections {
     // Suppresses default constructor, ensuring non-instantiability.
     private Collections() {
@@ -1193,6 +1193,7 @@ public class Collections {
     }
 
     /**
+     * 所谓的不可变就是把set方法抛出一个不支持操作的异常罢了= =。
      * @serial include
      */
     static class UnmodifiableList<E> extends UnmodifiableCollection<E>
@@ -1594,6 +1595,7 @@ public class Collections {
 
     /**
      * @serial include
+     * 巨特么无脑，直接锁一个mutex变量，初始化时可以传入一个对象作为mutex，不然就用this作为锁
      */
     static class SynchronizedCollection<E> implements Collection<E>, Serializable {
         private static final long serialVersionUID = 3053995032091335093L;

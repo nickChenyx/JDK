@@ -37,6 +37,8 @@ import java.util.Set;
  * @author Mike Grogan
  * @since 1.6
  */
+// 2017年12月5日
+// Bindings 接口的唯一实现，就是遵守了接口的规范，key只能是 String 且非空非null
 public class SimpleBindings implements Bindings {
 
     /**

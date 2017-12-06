@@ -33,6 +33,8 @@ import java.util.Map;
  * @author Mike Grogan
  * @since 1.6
  */
+// 2017年12月5日
+// 等于说 bindings 是一个 key 只能为字符串的 map。。。
 public interface Bindings extends Map<String, Object> {
     /**
      * Set a named value.

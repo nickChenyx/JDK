@@ -33,12 +33,18 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
+// 2017年12月6日
+/**
+ * 有过期的缓存实现
+ */
 class ExpiringCache {
     private long millisUntilExpiration;
     private Map  map;
     // Clear out old entries every few queries
     private int queryCount;
+    // 达到这个值的时候，会清理一次过期 entry。
     private int queryOverflow = 300;
+    // 最大的 entry 数量，达到了这个数值就无法存储新的值了。
     private int MAX_ENTRIES = 200;
 
     static class Entry {

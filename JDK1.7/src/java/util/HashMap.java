@@ -120,7 +120,7 @@ import java.io.*;
  * @see     Hashtable
  * @since   1.2
  */
-
+// 2017年12月5日
 public class HashMap<K,V>
     extends AbstractMap<K,V>
     implements Map<K,V>, Cloneable, Serializable
@@ -129,6 +129,7 @@ public class HashMap<K,V>
     /**
      * The default initial capacity - MUST be a power of two.
      */
+    // 容量必须是2的倍数 初始大小 16
     static final int DEFAULT_INITIAL_CAPACITY = 16;
 
     /**
@@ -164,6 +165,7 @@ public class HashMap<K,V>
      *
      * @serial
      */
+    // 全局不可变，构造函数里可以传入。
     final float loadFactor;
 
     /**
@@ -185,11 +187,17 @@ public class HashMap<K,V>
      * forces alternative hashing to be used at all times whereas
      * {@code -1} value ensures that alternative hashing is never used.
      */
+    // TODO 不清楚啥意思
+    // 在system property中设置了 jdk.map.althashing.threshold为 1，所有地方都强制使用alternative hashing
+    // 设置成-1，则不使用alternative hashing。
     static final int ALTERNATIVE_HASHING_THRESHOLD_DEFAULT = Integer.MAX_VALUE;
 
     /**
      * holds values which can't be initialized until after VM is booted.
      */
+    // This is related to the improvements of Java 7u6, and has been removed in Java 8.
+    // 可能是要读取jdk.map.althashing.threshold这个属性，必须要等到整个VM都启动之后才可以获得，设置了这么一个类去配置这些属性
+    // 搞不清楚= =...
     private static class Holder {
 
             // Unsafe mechanics
@@ -246,6 +254,7 @@ public class HashMap<K,V>
      * If {@code true} then perform alternative hashing of String keys to reduce
      * the incidence of collisions due to weak hash code calculation.
      */
+    // 是否使用 alternative hashing
     transient boolean useAltHashing;
 
     /**
@@ -275,15 +284,23 @@ public class HashMap<K,V>
 
         // Find a power of 2 >= initialCapacity
         int capacity = 1;
+        // 这里确保了容量为2的倍数
         while (capacity < initialCapacity)
             capacity <<= 1;
 
         this.loadFactor = loadFactor;
+        /**
+         * capacity 是 2的倍数， loadFactor是　３/４，　也就是这个结果是个奇数，
+         * MAXIMUM_CAPACITY + 1　也是个奇数，
+         * 最后要得出的阈值是个奇数= =。
+         */
         threshold = (int)Math.min(capacity * loadFactor, MAXIMUM_CAPACITY + 1);
+        // 最后生成的是一个 Entry的数组
         table = new Entry[capacity];
+        // 如果这个 capacity 大于 ALTERNATIVE_HASHING_THRESHOLD，这个hashmap很大= =，就使用 这个alternative hashing
         useAltHashing = sun.misc.VM.isBooted() &&
                 (capacity >= Holder.ALTERNATIVE_HASHING_THRESHOLD);
-        init();
+        init(); // 预留的钩子，子类可以使用这个钩子完成构造时的一些特定操作。
     }
 
     /**
@@ -359,6 +376,7 @@ public class HashMap<K,V>
 
     /**
      * Returns index for hash code h.
+     * 为 hash 定位到 index
      */
     static int indexFor(int h, int length) {
         return h & (length-1);
@@ -414,6 +432,7 @@ public class HashMap<K,V>
      * operations (get and put), but incorporated with conditionals in
      * others.
      */
+    // 拿到 null key的 value
     private V getForNullKey() {
         for (Entry<K,V> e = table[0]; e != null; e = e.next) {
             if (e.key == null)
@@ -441,6 +460,12 @@ public class HashMap<K,V>
      */
     final Entry<K,V> getEntry(Object key) {
         int hash = (key == null) ? 0 : hash(key);
+        // 通过 indexFor 找到对应key的hash在 table上的index
+        // 可能会有冲突所以往后移，需要向后查找，停止条件是这个链路到头了
+        //       e2
+        //       e1  e''
+        //       e   e'              < - 链路
+        // table 0   1   2   3
         for (Entry<K,V> e = table[indexFor(hash, table.length)];
              e != null;
              e = e.next) {
@@ -465,6 +490,7 @@ public class HashMap<K,V>
      *         (A <tt>null</tt> return can also indicate that the map
      *         previously associated <tt>null</tt> with <tt>key</tt>.)
      */
+    // 有则修改，无则添加
     public V put(K key, V value) {
         if (key == null)
             return putForNullKey(value);
@@ -493,11 +519,12 @@ public class HashMap<K,V>
             if (e.key == null) {
                 V oldValue = e.value;
                 e.value = value;
-                e.recordAccess(this);
+                e.recordAccess(this); // 预留的一个钩子，可以记录访问
                 return oldValue;
             }
         }
         modCount++;
+        // null 值存在第一位 0
         addEntry(0, null, value, 0);
         return null;
     }
@@ -568,6 +595,8 @@ public class HashMap<K,V>
 
     /**
      * Transfers all entries from current table to newTable.
+     *
+     * resize的时候，把老的table转移掉新table里
      */
     void transfer(Entry[] newTable, boolean rehash) {
         int newCapacity = newTable.length;
@@ -827,6 +856,9 @@ public class HashMap<K,V>
          * This method is invoked whenever the value in an entry is
          * overwritten by an invocation of put(k,v) for a key k that's already
          * in the HashMap.
+         *
+         * 这个方便子类有自己实现， put方法会调用这个方法。
+         * LinkedHashMap通过这个方法来设置 accessOrder 排序
          */
         void recordAccess(HashMap<K,V> m) {
         }
@@ -846,7 +878,10 @@ public class HashMap<K,V>
      *
      * Subclass overrides this to alter the behavior of put method.
      */
+    // 把 key value 打包成 entry 存储到table中
     void addEntry(int hash, K key, V value, int bucketIndex) {
+        // 达到阈值需要扩容了
+        // 虽然已经达到或者超过阈值了，但是如果现在在插入的 bucketIndex 这个位置下还是空的，那就先不扩容
         if ((size >= threshold) && (null != table[bucketIndex])) {
             resize(2 * table.length);
             hash = (null != key) ? hash(key) : 0;
@@ -864,12 +899,17 @@ public class HashMap<K,V>
      * Subclass overrides this to alter the behavior of HashMap(Map),
      * clone, and readObject.
      */
+    // 通过 hash 计算出 bucketIndex，这个 table[index] 下新建个 newEntry，并把oldEntry，放到 newEntry.next下
     void createEntry(int hash, K key, V value, int bucketIndex) {
         Entry<K,V> e = table[bucketIndex];
         table[bucketIndex] = new Entry<>(hash, key, value, e);
         size++;
     }
 
+    /**
+     * 提供map迭代器的基类，下面的key和value的迭代器只需要实现
+     * @see Iterator#next() 方法就好了
+     */
     private abstract class HashIterator<E> implements Iterator<E> {
         Entry<K,V> next;        // next entry to return
         int expectedModCount;   // For fast-fail
@@ -880,6 +920,7 @@ public class HashMap<K,V>
             expectedModCount = modCount;
             if (size > 0) { // advance to first entry
                 Entry[] t = table;
+                // 循环先找到第一个 entry，这样 next就有值了
                 while (index < t.length && (next = t[index++]) == null)
                     ;
             }
@@ -898,6 +939,7 @@ public class HashMap<K,V>
 
             if ((next = e.next) == null) {
                 Entry[] t = table;
+                // 同理 找到下一个 entry
                 while (index < t.length && (next = t[index++]) == null)
                     ;
             }
@@ -912,7 +954,8 @@ public class HashMap<K,V>
                 throw new ConcurrentModificationException();
             Object k = current.key;
             current = null;
-            HashMap.this.removeEntryForKey(k);
+            HashMap.this.removeEntryForKey(k); // 调用外部类方法, 可是为啥有 HashMap.this... 不使用这个也可以
+                                               // HashMap.this.remove() 这样可以区分开两个不同类的方法。
             expectedModCount = modCount;
         }
     }
@@ -1005,6 +1048,9 @@ public class HashMap<K,V>
         return (vs != null ? vs : (values = new Values()));
     }
 
+    /**
+     * 包装 map的values返回。这个values和 map本身的变化有直接联系
+     */
     private final class Values extends AbstractCollection<V> {
         public Iterator<V> iterator() {
             return newValueIterator();

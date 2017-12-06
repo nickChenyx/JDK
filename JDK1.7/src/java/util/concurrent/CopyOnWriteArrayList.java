@@ -75,6 +75,7 @@ import sun.misc.Unsafe;
  * @author Doug Lea
  * @param <E> the type of elements held in this collection
  */
+// 2017年11月28日
 public class CopyOnWriteArrayList<E>
     implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     private static final long serialVersionUID = 8673264195747942595L;
@@ -390,12 +391,17 @@ public class CopyOnWriteArrayList<E>
             Object[] elements = getArray();
             E oldValue = get(elements, index);
 
+            // 先上个锁，然后直接替换该 Object[] 数组
             if (oldValue != element) {
                 int len = elements.length;
                 Object[] newElements = Arrays.copyOf(elements, len);
                 newElements[index] = element;
                 setArray(newElements);
             } else {
+                // 这里我的想法是完全可以不用覆盖写
+                // https://stackoverflow.com/questions/28772539/why-setarray-method-call-required-in-copyonwritearraylist/28777239#28777239
+                // 看了一下 sf 有点迷糊，他们大致的意思就是，这玩意儿和 JMM（java memory model）有关，
+                // 为了强调 happen-before语义，做的冗余工作（啥是happen-before？从sf里看到的是说两个线程之间操作顺序时，happen-before语义可以确保在另一个线程访问前进行该操作
                 // Not quite a no-op; ensures volatile write semantics
                 setArray(elements);
             }
@@ -415,6 +421,7 @@ public class CopyOnWriteArrayList<E>
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
+            // 同理上锁加数据
             Object[] elements = getArray();
             int len = elements.length;
             Object[] newElements = Arrays.copyOf(elements, len + 1);
@@ -513,7 +520,7 @@ public class CopyOnWriteArrayList<E>
                 // This wins in the normal case of element being present
                 int newlen = len - 1;
                 Object[] newElements = new Object[newlen];
-
+                // 删除指定元素时= =直接复制了一份数组...
                 for (int i = 0; i < newlen; ++i) {
                     if (eq(o, elements[i])) {
                         // found one;  copy remaining and exit
@@ -910,6 +917,7 @@ public class CopyOnWriteArrayList<E>
      * @return {@code true} if the specified object is equal to this list
      */
     public boolean equals(Object o) {
+        // 惯用 equals 二段比较
         if (o == this)
             return true;
         if (!(o instanceof List))

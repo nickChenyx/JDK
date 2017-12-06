@@ -1,26 +1,6 @@
 /*
  * Copyright (c) 1997, 2006, Oracle and/or its affiliates. All rights reserved.
  * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
  */
 
 package java.util;
@@ -114,6 +94,8 @@ package java.util;
  * @see Set
  * @since 1.2
  */
+
+// 2017年12月4日
 public interface Map<K,V> {
     // Query Operations
 
@@ -124,6 +106,7 @@ public interface Map<K,V> {
      *
      * @return the number of key-value mappings in this map
      */
+    // 最大数量还是被限制在了 Integer.MAX_VALUE
     int size();
 
     /**
@@ -310,6 +293,7 @@ public interface Map<K,V> {
      *
      * @return a set view of the keys contained in this map
      */
+    // 和 map是绑定在一起的，修改两者之一都会影响另一个的值。
     Set<K> keySet();
 
     /**
@@ -327,6 +311,7 @@ public interface Map<K,V> {
      *
      * @return a collection view of the values contained in this map
      */
+    // 和 map是绑定在一起的，修改两者之一都会影响另一个的值。
     Collection<V> values();
 
     /**
@@ -345,6 +330,7 @@ public interface Map<K,V> {
      *
      * @return a set view of the mappings contained in this map
      */
+    // 和 map是绑定在一起的，修改两者之一都会影响另一个的值。
     Set<Map.Entry<K, V>> entrySet();
 
     /**
@@ -360,6 +346,7 @@ public interface Map<K,V> {
      * @see Map#entrySet()
      * @since 1.2
      */
+    // 用来存储 key-value 的对象，提供 collection 方式外部操作
     interface Entry<K,V> {
         /**
          * Returns the key corresponding to this entry.
