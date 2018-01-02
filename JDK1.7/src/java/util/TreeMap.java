@@ -102,7 +102,7 @@ package java.util;
  * @see Collection
  * @since 1.2
  */
-
+// 2018年1月2日
 public class TreeMap<K,V>
     extends AbstractMap<K,V>
     implements NavigableMap<K,V>, Cloneable, java.io.Serializable
@@ -334,6 +334,10 @@ public class TreeMap<K,V>
      *         and this map uses natural ordering, or its comparator
      *         does not permit null keys
      */
+    /*
+     * 这里只看没有设置 comparator 的逻辑。
+     * 这个 Entry是一个红黑树 拿到了 root 节点之后只查看 left|right 作比较了
+     */
     final Entry<K,V> getEntry(Object key) {
         // Offload comparator-based version for sake of performance
         if (comparator != null)
@@ -528,6 +532,7 @@ public class TreeMap<K,V>
     public V put(K key, V value) {
         Entry<K,V> t = root;
         if (t == null) {
+            // 年度骚操作啊 = =。 compare方法里已有的比较和类型转换操作，来进行排除 null值和 类型判断。
             compare(key, key); // type (and possibly null) check
 
             root = new Entry<>(key, value, null);
@@ -566,11 +571,11 @@ public class TreeMap<K,V>
                     return t.setValue(value);
             } while (t != null);
         }
-        Entry<K,V> e = new Entry<>(key, value, parent);
-        if (cmp < 0)
+        Entry<K,V> e = new Entry<>(key, value, parent); // 这里就开始加子节点了
+        if (cmp < 0) // 小的在左
             parent.left = e;
         else
-            parent.right = e;
+            parent.right = e; // 大的在右
         fixAfterInsertion(e);
         size++;
         modCount++;
@@ -2089,6 +2094,9 @@ public class TreeMap<K,V>
         }
     }
 
+    /*
+     * 崩盘的节奏， 这里就是新增元素之后调整树了吧
+     */
     /** From CLR */
     private void fixAfterInsertion(Entry<K,V> x) {
         x.color = RED;

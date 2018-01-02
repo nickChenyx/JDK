@@ -100,6 +100,7 @@ import java.io.ObjectStreamField;
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
  */
+// 2017年12月11日
 public class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
         implements ConcurrentMap<K, V>, Serializable {
     private static final long serialVersionUID = 7249069246763182397L;
@@ -239,6 +240,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
      * Mask value for indexing into segments. The upper bits of a
      * key's hash code are used to choose the segment.
      */
+    // hash 掩码，高位的数字会用来选择 segment
     final int segmentMask;
 
     /**

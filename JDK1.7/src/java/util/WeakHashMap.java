@@ -127,6 +127,7 @@ import java.lang.ref.ReferenceQueue;
  * @see         java.util.HashMap
  * @see         java.lang.ref.WeakReference
  */
+// 2018年1月2日
 public class WeakHashMap<K,V>
     extends AbstractMap<K,V>
     implements Map<K,V> {
@@ -770,6 +771,8 @@ public class WeakHashMap<K,V>
     }
 
     /**
+     * 基本上也就这里不一样，WeakHashMap的Entry是继承的 WeakReference
+     *
      * The entries in this hash table extend WeakReference, using its main ref
      * field as the key.
      */

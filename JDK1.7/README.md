@@ -37,7 +37,14 @@
 - [X] HashMap * 使用 Entry[] 数组来存储数据， 基于 hash 来定位index， 冲突之后，加载 Entry.next下
 - [X] LinkedHashMap * 使用一个 Entry header 作为游标，Entry内有属性 before/after，提供双向链表操作
 - [X] ExpiringCache * 使用 HashMap存储，Entry里包含了一个过期时间，获取的时候会检查这个过期时间，如果过期了就删除。这个有存储数量上限
-
+- [ ] ConcurrentMap
+- [ ] ConcurrentHashMap * [参考 1][ConcurrentHashMap01], [参考 2](ConcurrentHashMap02)
+- [X] SortedMap
+- [X] NavigableMap
+- [X] TreeMap 一个红黑树来维持顺序
+- [ ] ConcurrentNavigableMap
+- [ ] ConcurrentSkipListMap
+- [X] WeakHashMap 内部的 Entry是继承的 WeakReference
 
 ## Thinking
 
@@ -52,4 +59,5 @@
 存了一些关键词的解析，如 if for 之类的
 
 
-
+[ConcurrentHashMap01]: https://www.ibm.com/developerworks/cn/java/java-lo-concurrenthashmap/index.html
+[ConcurrentHashMap02]: http://www.infoq.com/cn/articles/ConcurrentHashMap
