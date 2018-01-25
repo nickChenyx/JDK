@@ -175,6 +175,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
      * unbounded retries if tables undergo continuous modification
      * which would make it impossible to obtain an accurate result.
      */
+    // 计算 size 和 containValue 的时候 会重试这个次数
     static final int RETRIES_BEFORE_LOCK = 2;
 
     /* ---------------- Fields -------------- */
@@ -385,12 +386,14 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
          * number of retries maintains cache acquired while locating
          * nodes.
          */
+        // 在 put remove replace 的时候，会重试这个次数
         static final int MAX_SCAN_RETRIES =
             Runtime.getRuntime().availableProcessors() > 1 ? 64 : 1;
 
         /**
          * The per-segment table. Elements are accessed via
          * entryAt/setEntryAt providing volatile semantics.
+         * 通过 entryAt/setEntryAt 访问元素，这些操作具有 volatile 语义
          */
         transient volatile HashEntry<K,V>[] table;
 
@@ -588,6 +591,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
          * lock even if the key is not found, to ensure sequential
          * consistency of updates.
          */
+        // replace 和 remove 的时候会做这个动作
         private void scanAndLock(Object key, int hash) {
             // similar to but simpler than scanAndLockForPut
             HashEntry<K,V> first = entryForHash(this, hash);
@@ -944,6 +948,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
         int retries = -1; // first iteration isn't retry
         try {
             for (;;) {
+                // 先尝试直接获取 size 大小，这里有计算一个 modCount的数值，会和上次（last）作比较，如果一样的话，说明map没有做增删操作啥的，就是正确的了
+                // 如果尝试的次数超过了 RETRIES_BEFORE_LOCK， 就直接去锁 segment 再计数
                 if (retries++ == RETRIES_BEFORE_LOCK) {
                     for (int j = 0; j < segments.length; ++j)
                         ensureSegment(j).lock(); // force creation
@@ -1050,6 +1056,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
         long last = 0;
         int retries = -1;
         try {
+            // 少见的用了到 label 来跳出循环
             outer: for (;;) {
                 if (retries++ == RETRIES_BEFORE_LOCK) {
                     for (int j = 0; j < segments.length; ++j)
