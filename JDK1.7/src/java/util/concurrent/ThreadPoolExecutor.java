@@ -314,12 +314,20 @@ import java.util.*;
  * @since 1.5
  * @author Doug Lea
  */
+// 2018年3月15日
 public class ThreadPoolExecutor extends AbstractExecutorService {
     /**
+     * ctl 这个字段是一个 atomic integer 用来存储两个信息。
+     *  1、workerCount 在用的线程数
+     *  2、runState 表示当前线程池的状态， running、shutting down 之类
+     *
      * The main pool control state, ctl, is an atomic integer packing
      * two conceptual fields
      *   workerCount, indicating the effective number of threads
      *   runState,    indicating whether running, shutting down etc
+     *
+     *
+     * 为了能够把两个信息放入一个 int 内， 限制 workerCount 在 (2^29)-1 (about 500 million) 这个范围内
      *
      * In order to pack them into one int, we limit workerCount to
      * (2^29)-1 (about 500 million) threads rather than (2^31)-1 (2
@@ -335,6 +343,15 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * asked, and when exiting threads are still performing
      * bookkeeping before terminating. The user-visible pool size is
      * reported as the current size of the workers set.
+     *
+     *
+     * runState 提供了主要的生命周期控制信息：
+     *  1、RUNNING          可接受新的任务，处理队列中的任务
+     *  2、SHUTDOWN         不再接受新的任务，但是会继续处理队列中的请求
+     *  3、STOP             不再接受新的任务，不再处理队列中的请求，并中断正在运行的任务
+     *  4、TIDYING          所有的任务都终止了，workCount为0，线程的状态转变为 TIDYDING 时会运行 terminated() 钩子方法
+     *  5、TERMINATED       terminated()方法已经完成
+     *
      *
      * The runState provides the main lifecyle control, taking on values:
      *
@@ -372,6 +389,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * that workerCount is 0 (which sometimes entails a recheck -- see
      * below).
      */
+    // 对 RUNNING 这个数值做 或操作 得到一个负值，可以表示 workCount 和 runState
     private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
     private static final int COUNT_BITS = Integer.SIZE - 3;
     private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
@@ -506,11 +524,14 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     private volatile ThreadFactory threadFactory;
 
     /**
+     * 拒绝服务，可能是因为线程池大小超了，或者 shutdown 了
      * Handler called when saturated or shutdown in execute.
      */
     private volatile RejectedExecutionHandler handler;
 
     /**
+     * 超时控制，超过这个时间会自动回收创建的线程。
+     *
      * Timeout in nanoseconds for idle threads waiting for work.
      * Threads use this timeout when there are more than corePoolSize
      * present or if allowCoreThreadTimeOut. Otherwise they wait
